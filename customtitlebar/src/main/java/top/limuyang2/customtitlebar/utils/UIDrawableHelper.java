@@ -6,8 +6,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.support.annotation.ColorInt;
 
-;
-
 public class UIDrawableHelper {
 
     /**

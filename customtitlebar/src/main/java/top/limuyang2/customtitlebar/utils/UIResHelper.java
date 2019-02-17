@@ -9,7 +9,6 @@ import android.util.TypedValue;
 
 public class UIResHelper {
 
-
     public static float getAttrFloatValue(Context context, int attrRes){
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(attrRes, typedValue, true);
