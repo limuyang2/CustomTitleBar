@@ -21,5 +21,7 @@ class MainActivity : AppCompatActivity() {
 
         titleBar.removeCenterViewAndTitleView()
         titleBar.title = "TitleBar2"
+
+        titleBar.addRightTextButton("呵呵",0)
     }
 }

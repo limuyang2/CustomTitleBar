@@ -229,7 +229,7 @@ class CustomTitleBar @JvmOverloads constructor(
         if (array != null) {
             mTitleBarDividerColor = array.getColor(
                     R.styleable.CustomTitleBar_titlebar_divider_color,
-                    ContextCompat.getColor(context, R.color.divider)
+                    ContextCompat.getColor(context, R.color.config_color_divider)
             )
             mTitleBarDividerHeight = array.getDimensionPixelSize(R.styleable.CustomTitleBar_titlebar_divider_height, 1)
             mTitleBarBgColor = array.getColor(R.styleable.CustomTitleBar_titlebar_bg_color, Color.WHITE)
