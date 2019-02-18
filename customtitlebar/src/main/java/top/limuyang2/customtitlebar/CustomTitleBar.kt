@@ -673,6 +673,7 @@ class CustomTitleBar @JvmOverloads constructor(
         button.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePX)
         button.gravity = Gravity.CENTER
         button.text = text
+        button.isAllCaps = false
         return button
     }
 

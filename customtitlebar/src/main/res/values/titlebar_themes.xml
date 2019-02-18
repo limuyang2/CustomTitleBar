@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppRootTheme" parent="android:Theme.Holo.Light" />
-
-    <style name="AppBaseTheme" parent="AppRootTheme">
-        <item name="android:imageButtonStyle">@style/ImageButton</item>
-        <item name="android:buttonStyle">@style/Button</item>
-        <item name="android:textViewStyle">@style/TextView</item>
-    </style>
-
-    <style name="AppConfigTheme" parent="AppBaseTheme" />
-
-
-    <style name="CustomTitleBar" parent="AppConfigTheme">
+    <style name="CustomTitleBar">
         <!--**********************************************
           *                TitleBar              *
           **********************************************-->
@@ -40,33 +29,6 @@
         <item name="titlebar_text_btn_text_size">16sp</item>
     </style>
 
-
-    <style name="ImageButtonBase" parent="android:Widget.Holo.Light.ImageButton" />
-
-    <style name="TextAppearanceBase" parent="android:TextAppearance.Holo" />
-
-    <style name="ButtonBase" parent="android:Widget.Holo.Light.Button" />
-
-    <style name="ImageButton" parent="ImageButtonBase">
-        <item name="android:background">@color/config_color_transparent</item>
-    </style>
-
-    <style name="Button" parent="ButtonBase" />
-
-
-    <style name="TextView" parent="android:Widget.TextView">
-        <item name="android:textAppearance">@style/UITextAppearance</item>
-        <!-- textColorHighlight 放在appearance中无效，好像TextView总是默认存在一个textColorHighlight
-             会覆盖掉它，并不知道原因 -->
-        <item name="android:textColorHighlight">?attr/config_color_background_pressed</item>
-    </style>
-
-
-    <style name="UITextAppearance" parent="TextAppearanceBase">
-        <item name="android:textColor">?attr/config_color_black</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColorHighlight">?attr/config_color_background_pressed</item>
-    </style>
 
     <style name="CustomTitleBar.NoActionBar">
         <item name="android:windowActionBar">false</item>

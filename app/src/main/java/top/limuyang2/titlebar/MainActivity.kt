@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         titleBar.removeCenterViewAndTitleView()
         titleBar.titleRes = R.string.app_name
 
-        titleBar.addRightTextButton("呵呵")
-        titleBar.addRightImageButton(R.drawable.icon_titlebar_back)
+        titleBar.addRightTextButton("coll")
+        titleBar.addRightImageButton(android.R.drawable.ic_menu_search)
     }
 }
