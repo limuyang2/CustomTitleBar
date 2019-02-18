@@ -1,3 +1,4 @@
+[![](https://jitpack.io/v/limuyang2/CustomTitleBar.svg)](https://jitpack.io/#limuyang2/CustomTitleBar)
 # CustomTitleBar
 自定义标题栏，拥有丰富的属性，支持标题对其方式、副标题、图标按钮、文字按钮等等。
 
