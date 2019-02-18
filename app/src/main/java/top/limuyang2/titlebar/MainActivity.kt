@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         titleBar.removeCenterViewAndTitleView()
         titleBar.title = "TitleBar2"
 
-        titleBar.addRightTextButton("呵呵",0)
+        titleBar.addRightTextButton("呵呵")
+        titleBar.addRightImageButton(R.drawable.icon_titlebar_back)
+//        titleBar.addRightImageButton(R.drawable.icon_titlebar_back,0)
     }
 }

@@ -27,6 +27,7 @@ class UIAlphaViewHelper {
     UIAlphaViewHelper(@NonNull View target) {
         mTarget = target;
         float getPressedAlpha = UIResHelper.getAttrFloatValue(target.getContext(), R.attr.alpha_pressed);
+        System.out.println("------> getPressedAlpha : " + getPressedAlpha);
         mPressedAlpha = getPressedAlpha == 0f ? .5f : getPressedAlpha;
 
         float getDisabledAlpha = UIResHelper.getAttrFloatValue(target.getContext(), R.attr.alpha_disabled);

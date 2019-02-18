@@ -4,14 +4,34 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <!--标题栏主题样式-->
-        <item name="CustomTitleBarStyle">@style/NormalTitleBarStyle</item>
+        <item name="CustomTitleBarStyle">@style/CustomTitleBar.Normal</item>
+
+        <item name="alpha_pressed">0.6</item>
     </style>
 
-    <style name="NormalTitleBarStyle" parent="CustomTitleBar.TopBar">
+    <!--<style name="NormalTitleBarStyle" parent="CustomTitleBar.TopBar">-->
+        <!--<item name="titlebar_height">56dp</item>-->
+        <!--<item name="titlebar_elevation">8dp</item>-->
+        <!--<item name="titlebar_bg_color">@color/colorPrimary</item>-->
+        <!--<item name="titlebar_title_text_size">17sp</item>-->
+        <!--<item name="titlebar_title_color">#ffffff</item>-->
+        <!--<item name="titlebar_subtitle_color">#ffffff</item>-->
+        <!--<item name="titlebar_title_gravity">left_center</item>-->
+        <!--&lt;!&ndash;如果需要背景透明，则不能显示分割线分割线&ndash;&gt;-->
+        <!--<item name="titlebar_show_divider">false</item>-->
+        <!--<item name="titlebar_divider_height">0.5dp</item>-->
+        <!--&lt;!&ndash;<item name="titlebar_image_btn_width">37dp</item>&ndash;&gt;-->
+        <!--<item name="android:paddingLeft">10dp</item>-->
+        <!--<item name="android:paddingRight">10dp</item>-->
+        <!--&lt;!&ndash;<item name="titlebar_image_btn_height">37dp</item>&ndash;&gt;-->
+        <!--<item name="titlebar_text_btn_text_size">16sp</item>-->
+    <!--</style>-->
+
+    <style name="CustomTitleBar.Normal">
         <item name="titlebar_height">56dp</item>
         <item name="titlebar_elevation">8dp</item>
         <item name="titlebar_bg_color">@color/colorPrimary</item>
@@ -27,5 +47,7 @@
         <item name="android:paddingRight">10dp</item>
         <!--<item name="titlebar_image_btn_height">37dp</item>-->
         <item name="titlebar_text_btn_text_size">16sp</item>
+
+
     </style>
 </resources>

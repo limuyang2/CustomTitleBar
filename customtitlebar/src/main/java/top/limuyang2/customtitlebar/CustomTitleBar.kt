@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.support.annotation.DrawableRes
 import android.support.annotation.IntRange
 import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
@@ -450,8 +451,7 @@ class CustomTitleBar @JvmOverloads constructor(
      */
     fun addRightView(view: View, viewId: Int) {
         val viewLayoutParams = view.layoutParams
-        val layoutParams: RelativeLayout.LayoutParams
-        layoutParams = if (viewLayoutParams is RelativeLayout.LayoutParams) {
+        val layoutParams: RelativeLayout.LayoutParams = if (viewLayoutParams is RelativeLayout.LayoutParams) {
             viewLayoutParams
         } else {
             RelativeLayout.LayoutParams(
@@ -498,10 +498,17 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId        该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addRightImageButton(drawableResId: Int, viewId: Int): UIAlphaImageButton {
+    fun addRightImageButton(@DrawableRes drawableResId: Int, viewId: Int): UIAlphaImageButton {
         val rightButton = generateTopBarImageButton(drawableResId)
         rightButton.setChangeAlphaWhenPress(true)
         this.addRightView(rightButton, viewId, generateTopBarImageButtonLayoutParams())
+        return rightButton
+    }
+
+    fun addRightImageButton(@DrawableRes drawableResId: Int): UIAlphaImageButton {
+        val rightButton = generateTopBarImageButton(drawableResId)
+        rightButton.setChangeAlphaWhenPress(true)
+        this.addRightView(rightButton, rightButton.hashCode(), generateTopBarImageButtonLayoutParams())
         return rightButton
     }
 
@@ -512,9 +519,15 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId        该按钮的 id，可在ids.xml中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addLeftImageButton(drawableResId: Int, viewId: Int): UIAlphaImageButton {
+    fun addLeftImageButton(@DrawableRes drawableResId: Int, viewId: Int): UIAlphaImageButton {
         val leftButton = generateTopBarImageButton(drawableResId)
         this.addLeftView(leftButton, viewId, generateTopBarImageButtonLayoutParams())
+        return leftButton
+    }
+
+    fun addLeftImageButton(@DrawableRes drawableResId: Int): UIAlphaImageButton {
+        val leftButton = generateTopBarImageButton(drawableResId)
+        this.addLeftView(leftButton, leftButton.hashCode(), generateTopBarImageButtonLayoutParams())
         return leftButton
     }
 
@@ -533,7 +546,7 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId      该按钮的id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addLeftTextButton(stringResId: Int, viewId: Int): Button {
+    fun addLeftTextButton(@StringRes stringResId: Int, viewId: Int): Button {
         return addLeftTextButton(resources.getString(stringResId), viewId)
     }
 
@@ -544,8 +557,8 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId      该按钮的id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addLeftTextButton(stringResId: Int, viewId: Int, textColor: ColorStateList, textSize: Int): Button {
-        return addLeftTextButton(resources.getString(stringResId), viewId, textColor, textSize)
+    fun addLeftTextButton(@StringRes stringResId: Int, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+        return addLeftTextButton(resources.getString(stringResId), viewId, textColor, textSizePX)
     }
 
     /**
@@ -555,8 +568,8 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId     该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addLeftTextButton(buttonText: String, viewId: Int, textColor: ColorStateList, textSize: Int): Button {
-        val button = generateTopBarTextButton(buttonText, textColor, textSize)
+    fun addLeftTextButton(buttonText: String, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+        val button = generateTopBarTextButton(buttonText, textColor, textSizePX)
         this.addLeftView(button, viewId, generateTopBarTextButtonLayoutParams())
         return button
     }
@@ -574,6 +587,12 @@ class CustomTitleBar @JvmOverloads constructor(
         return button
     }
 
+    fun addLeftTextButton(buttonText: String): Button {
+        val button = generateTopBarTextButton(buttonText)
+        this.addLeftView(button, button.hashCode(), generateTopBarTextButtonLayoutParams())
+        return button
+    }
+
     /**
      * 在 TopBar 右边添加一个 Button，并设置文字
      *
@@ -581,7 +600,7 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId      该按钮的id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addRightTextButton(stringResId: Int, viewId: Int): Button {
+    fun addRightTextButton(@StringRes stringResId: Int, viewId: Int): Button {
         return addRightTextButton(resources.getString(stringResId), viewId)
     }
 
@@ -592,8 +611,12 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId      该按钮的id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addRightTextButton(stringResId: Int, viewId: Int, textColor: ColorStateList, textSize: Int): Button {
-        return addRightTextButton(resources.getString(stringResId), viewId, textColor, textSize)
+    fun addRightTextButton(@StringRes stringResId: Int, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+        return addRightTextButton(resources.getString(stringResId), viewId, textColor, textSizePX)
+    }
+
+    fun addRightTextButton(@StringRes stringResId: Int): Button {
+        return addRightTextButton(resources.getString(stringResId))
     }
 
     /**
@@ -603,8 +626,8 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId     该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addRightTextButton(buttonText: String, viewId: Int, textColor: ColorStateList, textSize: Int): Button {
-        val button = generateTopBarTextButton(buttonText, textColor, textSize)
+    fun addRightTextButton(buttonText: String, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+        val button = generateTopBarTextButton(buttonText, textColor, textSizePX)
         this.addRightView(button, viewId, generateTopBarTextButtonLayoutParams())
         return button
     }
@@ -622,25 +645,9 @@ class CustomTitleBar @JvmOverloads constructor(
         return button
     }
 
-    /**
-     * 生成一个文本按钮，并设置文字
-     *
-     * @param text 按钮的文字
-     * @return 返回生成的按钮
-     */
-    private fun generateTopBarTextButton(text: String): Button {
-        val button = Button(context)
-        button.setBackgroundResource(0)
-        button.minWidth = 0
-        button.minHeight = 0
-        button.minimumWidth = 0
-        button.minimumHeight = 0
-        val paddingHorizontal = topBarTextBtnPaddingHorizontal
-        button.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
-        button.setTextColor(if (mTopBarTextBtnTextColor == null) context.resources.getColorStateList(R.color.titlebar_text_color) else mTopBarTextBtnTextColor)
-        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTopBarTextBtnTextSize.toFloat())
-        button.gravity = Gravity.CENTER
-        button.text = text
+    fun addRightTextButton(buttonText: String): Button {
+        val button = generateTopBarTextButton(buttonText)
+        this.addRightView(button, button.hashCode(), generateTopBarTextButtonLayoutParams())
         return button
     }
 
@@ -650,7 +657,10 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param text 按钮的文字
      * @return 返回生成的按钮
      */
-    private fun generateTopBarTextButton(text: String, textColor: ColorStateList, textSize: Int): Button {
+    private fun generateTopBarTextButton(text: String,
+                                         textColor: ColorStateList = mTopBarTextBtnTextColor
+                                                 ?: context.resources.getColorStateList(R.color.titlebar_text_color),
+                                         textSizePX: Float = mTopBarTextBtnTextSize.toFloat()): Button {
         val button = Button(context)
         button.setBackgroundResource(0)
         button.minWidth = 0
@@ -660,7 +670,7 @@ class CustomTitleBar @JvmOverloads constructor(
         val paddingHorizontal = topBarTextBtnPaddingHorizontal
         button.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
         button.setTextColor(textColor)
-        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, ScreenHelper.sp2px(context, textSize).toFloat())
+        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePX)
         button.gravity = Gravity.CENTER
         button.text = text
         return button
