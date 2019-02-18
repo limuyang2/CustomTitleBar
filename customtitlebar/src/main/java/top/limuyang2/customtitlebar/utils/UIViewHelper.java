@@ -14,48 +14,6 @@ import android.view.ViewParent;
 
 public class UIViewHelper {
 
-    // copy from View.generateViewId for API <= 16
-//    private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
-
-//    private static final int[] APPCOMPAT_CHECK_ATTRS = {
-//            android.support.v7.appcompat.R.attr.colorPrimary
-//    };
-
-//    public static void checkAppCompatTheme(Context context) {
-//        TypedArray a = context.obtainStyledAttributes(APPCOMPAT_CHECK_ATTRS);
-//        final boolean failed = !a.hasValue(0);
-//        a.recycle();
-//        if (failed) {
-//            throw new IllegalArgumentException("You need to use a Theme.AppCompat theme "
-//                    + "(or descendant) with the design library.");
-//        }
-//    }
-
-
-    /**
-     * 获取activity的根view
-     * @param activity activity
-     * @return 根view
-     */
-//    public static View getActivityRoot(Activity activity) {
-//        return ((ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT)).getChildAt(0);
-//    }
-
-
-    /**
-     * 触发window的insets的广播，使得view的fitSystemWindows得以生效
-     * @param window window
-     */
-//    @SuppressWarnings("deprecation")
-//    public static void requestApplyInsets(Window window) {
-//        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
-//            window.getDecorView().requestFitSystemWindows();
-//        } else if (Build.VERSION.SDK_INT >= 21) {
-//            window.getDecorView().requestApplyInsets();
-//        }
-//    }
-
-
     /**
      * 扩展点击区域的范围
      *
@@ -82,7 +40,6 @@ public class UIViewHelper {
     }
 
 
-    @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static void setBackgroundKeepingPadding(View view, Drawable drawable) {
         int[] padding = new int[]{view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom()};
@@ -93,12 +50,6 @@ public class UIViewHelper {
         }
         view.setPadding(padding[0], padding[1], padding[2], padding[3]);
     }
-
-//    @SuppressWarnings("deprecation")
-//    public static void setBackgroundKeepingPadding(View view, int backgroundResId) {
-//        setBackgroundKeepingPadding(view, view.getResources().getDrawable(backgroundResId));
-//    }
-
 
     public static void setBackgroundColorKeepPadding(View view, @ColorInt int color) {
         int[] padding = new int[]{view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom()};
