@@ -24,7 +24,7 @@ import top.limuyang2.customtitlebar.utils.UIViewHelper
 import top.limuyang2.customtitlebar.widget.UIAlphaImageButton
 import java.util.*
 
-@SuppressWarnings("unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 class CustomTitleBar @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
@@ -743,11 +743,13 @@ class CustomTitleBar @JvmOverloads constructor(
     /**
      * 设置 TopBar 背景的透明度
      *
-     * @param alpha 取值范围：[0, 255]，255表示不透明
+     * 值范围：[0, 255]，255表示不透明
      */
-    fun setBackgroundAlpha(@IntRange(from = 0, to = 255) alpha: Int) {
-        this.background.alpha = alpha
-    }
+    var backgroundAlpha: Int
+        set(@IntRange(from = 0, to = 255) value) {
+            this.background.alpha = value
+        }
+        get() = this.background.alpha
 
     /**
      * 根据当前 offset、透明度变化的初始 offset 和目标 offset，计算并设置 bar 的透明度
@@ -760,7 +762,7 @@ class CustomTitleBar @JvmOverloads constructor(
         var alpha = ((currentOffset - alphaBeginOffset).toDouble() / (alphaTargetOffset - alphaBeginOffset))
         alpha = Math.max(0.0, Math.min(alpha, 1.0)) // from 0 to 1
         val alphaInt = (alpha * 255).toInt()
-        this.setBackgroundAlpha(alphaInt)
+        this.backgroundAlpha = alphaInt
         return alphaInt
     }
 

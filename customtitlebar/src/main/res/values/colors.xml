@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#2196F3</color>
     <color name="config_color_divider">#DEE0E2</color>
     <color name="config_color_divider_darken">#D4D6D8</color>
     <color name="config_color_transparent">#00000000</color>

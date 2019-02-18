@@ -17,13 +17,12 @@ class MainActivity : AppCompatActivity() {
         titleBar.subTitle = "sub Title"
 
         titleBar.showTitleView = true
-        titleBar.titleGravity = Gravity.CENTER
+        titleBar.titleGravity = Gravity.START
 
         titleBar.removeCenterViewAndTitleView()
-        titleBar.title = "TitleBar2"
+        titleBar.titleRes = R.string.app_name
 
         titleBar.addRightTextButton("呵呵")
         titleBar.addRightImageButton(R.drawable.icon_titlebar_back)
-//        titleBar.addRightImageButton(R.drawable.icon_titlebar_back,0)
     }
 }

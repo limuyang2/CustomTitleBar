@@ -10,7 +10,7 @@
         <!--标题栏主题样式-->
         <item name="CustomTitleBarStyle">@style/CustomTitleBar.Normal</item>
 
-        <item name="alpha_pressed">0.6</item>
+        <item name="alpha_pressed">0.5</item>
     </style>
 
     <!--<style name="NormalTitleBarStyle" parent="CustomTitleBar.TopBar">-->
@@ -43,8 +43,8 @@
         <item name="titlebar_show_divider">false</item>
         <item name="titlebar_divider_height">0.5dp</item>
         <!--<item name="titlebar_image_btn_width">37dp</item>-->
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
+        <!--<item name="android:paddingLeft">10dp</item>-->
+        <!--<item name="android:paddingRight">10dp</item>-->
         <!--<item name="titlebar_image_btn_height">37dp</item>-->
         <item name="titlebar_text_btn_text_size">16sp</item>
 
