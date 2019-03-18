@@ -1,10 +1,7 @@
 package top.limuyang2.titlebar
 
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.RelativeLayout
-import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -13,14 +10,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val testView = TextView(this).apply {
-            text = "wwwwwwww"
-            setBackgroundColor(Color.DKGRAY)
-            layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT)
-        }
-        titleBar.setCenterView(testView)
+//        val testView = TextView(this).apply {
+//            text = "wwwwwwww"
+//            setBackgroundColor(Color.DKGRAY)
+//            layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT)
+//        }
+//        titleBar.setCenterView(testView)
 
-//        titleBar.title = "TitleBar"
+        titleBar.title = "TitleBar"
 //
 //        titleBar.subTitle = "sub Title"
 //

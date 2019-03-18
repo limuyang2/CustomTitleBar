@@ -46,30 +46,25 @@ class CustomTitleBar @JvmOverloads constructor(
         return@lazy ll
     }
     // 显示 title 文字的 TextView
-    private val mTitleView: TextView by lazy {
-        val titleView = TextView(context)
-        titleView.gravity = Gravity.CENTER
-        titleView.setSingleLine(true)
-        titleView.ellipsize = TextUtils.TruncateAt.MIDDLE
-        titleView.setTextColor(mTitleTextColor)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            titleView.letterSpacing = 0.12f
-        }
-        titleView.tag = TITLE_VIEW_TAG
-
-        return@lazy titleView
+    val titleView: TextView by lazy {
+        val textView = TextView(context)
+        textView.gravity = Gravity.CENTER
+        textView.setSingleLine(true)
+        textView.ellipsize = TextUtils.TruncateAt.MIDDLE
+        textView.setTextColor(mTitleTextColor)
+        textView.tag = TITLE_VIEW_TAG
+        return@lazy textView
     }
     // 显示 subTitle 文字的 TextView
-    private val mSubTitleView: TextView by lazy {
-        val titleView = TextView(context)
-        titleView.gravity = Gravity.CENTER
-        titleView.setSingleLine(true)
-        titleView.ellipsize = TextUtils.TruncateAt.MIDDLE
-        titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSubTitleTextSize.toFloat())
-        titleView.setTextColor(mSubTitleTextColor)
-        titleView.tag = SUBTITLE_VIEW_TAG
-
-        return@lazy titleView
+    val subTitleView: TextView by lazy {
+        val textView = TextView(context)
+        textView.gravity = Gravity.CENTER
+        textView.setSingleLine(true)
+        textView.ellipsize = TextUtils.TruncateAt.MIDDLE
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSubTitleTextSize.toFloat())
+        textView.setTextColor(mSubTitleTextColor)
+        textView.tag = SUBTITLE_VIEW_TAG
+        return@lazy textView
     }
 
     private var mLeftViewList: MutableList<View> = ArrayList()
@@ -84,6 +79,7 @@ class CustomTitleBar @JvmOverloads constructor(
     private var mTitleGravity: Int = Gravity.START
     private var mLeftBackDrawableRes: Int = 0
     private var topBarHeight = -1
+    private var mTitleLetterSpacing = 0f //标题字间距
     private var mTitleTextSize: Int = 0
     private var mTitleTextSizeWithSubTitle: Int = 0
     private var mSubTitleTextSize: Int = 0
@@ -139,18 +135,21 @@ class CustomTitleBar @JvmOverloads constructor(
      * TopBar 的标题
      */
     var title: CharSequence?
-        get() = mTitleView.text
+        get() = titleView.text
         set(value) {
             if (!isTitleViewAdd()) {
                 updateTitleViewStyle()
                 val titleLp = generateTitleViewAndSubTitleViewLp()
-                mTitleContainerView.addView(mTitleView, titleLp)
+                mTitleContainerView.addView(titleView, titleLp)
             }
-            mTitleView.text = value
+            titleView.text = value
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                titleView.letterSpacing = mTitleLetterSpacing
+            }
             if (value.isNullOrEmpty()) {
-                mTitleView.visibility = View.GONE
+                titleView.visibility = View.GONE
             } else {
-                mTitleView.visibility = View.VISIBLE
+                titleView.visibility = View.VISIBLE
             }
         }
 
@@ -158,18 +157,18 @@ class CustomTitleBar @JvmOverloads constructor(
      * TopBar 的副标题
      */
     var subTitle: CharSequence?
-        get() = mSubTitleView.text
+        get() = subTitleView.text
         set(value) {
             if (!isSubTitleViewAdd()) {
                 val titleLp = generateTitleViewAndSubTitleViewLp()
                 titleLp.topMargin = context.dip(1)
-                mTitleContainerView.addView(mSubTitleView, titleLp)
+                mTitleContainerView.addView(subTitleView, titleLp)
             }
-            mSubTitleView.text = value
+            subTitleView.text = value
             if (value.isNullOrEmpty()) {
-                mSubTitleView.visibility = View.GONE
+                subTitleView.visibility = View.GONE
             } else {
-                mSubTitleView.visibility = View.VISIBLE
+                subTitleView.visibility = View.VISIBLE
             }
             // 更新 titleView 的样式（因为有没有 subTitle 会影响 titleView 的样式）
             updateTitleViewStyle()
@@ -189,10 +188,10 @@ class CustomTitleBar @JvmOverloads constructor(
 
     var showTitleView: Boolean
         get() {
-            return mTitleView.visibility == View.VISIBLE
+            return titleView.visibility == View.VISIBLE
         }
         set(value) {
-            mTitleView.visibility = if (value) View.VISIBLE else View.GONE
+            titleView.visibility = if (value) View.VISIBLE else View.GONE
         }
 
     /**
@@ -203,13 +202,13 @@ class CustomTitleBar @JvmOverloads constructor(
         set(value) {
             mTitleGravity = value
             if (isTitleViewAdd()) {
-                (mTitleView.layoutParams as LinearLayout.LayoutParams).gravity = value
+                (titleView.layoutParams as LinearLayout.LayoutParams).gravity = value
                 if (value == Gravity.CENTER || value == Gravity.CENTER_HORIZONTAL) {
-                    mTitleView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingBottom)
+                    titleView.setPadding(paddingLeft, paddingTop, paddingLeft, paddingBottom)
                 }
             }
             if (isSubTitleViewAdd()) {
-                (mSubTitleView.layoutParams as LinearLayout.LayoutParams).gravity = value
+                (subTitleView.layoutParams as LinearLayout.LayoutParams).gravity = value
             }
             requestLayout()
         }
@@ -273,6 +272,10 @@ class CustomTitleBar @JvmOverloads constructor(
         )
         mTitleGravity =
             array.getInt(R.styleable.CustomTitleBar_titlebar_title_gravity, mTitleGravity)
+        mTitleLetterSpacing = array.getFloat(
+            R.styleable.CustomTitleBar_titlebar_title_letter_spacing,
+            mTitleLetterSpacing
+        )
         mTitleTextSize = array.getDimensionPixelSize(
             R.styleable.CustomTitleBar_titlebar_title_text_size,
             context.sp(17)
@@ -369,10 +372,10 @@ class CustomTitleBar @JvmOverloads constructor(
      * 更新 titleView 的样式（因为有没有 subTitle 会影响 titleView 的样式）
      */
     private fun updateTitleViewStyle() {
-        if (!isSubTitleViewAdd() || mSubTitleView.text.isNullOrEmpty()) {
-            mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize.toFloat())
+        if (!isSubTitleViewAdd() || subTitleView.text.isNullOrEmpty()) {
+            titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSize.toFloat())
         } else {
-            mTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSizeWithSubTitle.toFloat())
+            titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTitleTextSizeWithSubTitle.toFloat())
         }
     }
 
@@ -769,8 +772,8 @@ class CustomTitleBar @JvmOverloads constructor(
         }
 
         if (isTitleViewAdd()) {
-            if (mTitleView.parent == this) {
-                removeView(mTitleView)
+            if (titleView.parent == this) {
+                removeView(titleView)
             }
         }
     }

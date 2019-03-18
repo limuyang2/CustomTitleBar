@@ -14,6 +14,8 @@
         <attr name="titlebar_divider_height" format="dimension" />
         <attr name="titlebar_bg_color" format="color" />
         <attr name="titlebar_left_back_drawable_id" format="reference" />
+
+        <attr name="titlebar_title_letter_spacing" format="float" />
         <attr name="titlebar_title_text_size" format="dimension" />
         <attr name="titlebar_title_text_size_with_subtitle" format="dimension" />
         <attr name="titlebar_subtitle_text_size" format="dimension" />
