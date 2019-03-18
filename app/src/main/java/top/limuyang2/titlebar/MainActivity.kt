@@ -1,8 +1,10 @@
 package top.limuyang2.titlebar
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Gravity
+import android.widget.RelativeLayout
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -11,17 +13,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        titleBar.title = "TitleBar"
+        val testView = TextView(this).apply {
+            text = "wwwwwwww"
+            setBackgroundColor(Color.DKGRAY)
+            layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT)
+        }
+        titleBar.setCenterView(testView)
+
+//        titleBar.title = "TitleBar"
+//
+//        titleBar.subTitle = "sub Title"
+//
+//        titleBar.showTitleView = true
+//        titleBar.titleGravity = Gravity.START
+//
+//        titleBar.removeCenterViewAndTitleView()
+//        titleBar.titleRes = R.string.app_name
 
         titleBar.addLeftBackImageButton()
-        titleBar.subTitle = "sub Title"
-
-        titleBar.showTitleView = true
-        titleBar.titleGravity = Gravity.START
-
-        titleBar.removeCenterViewAndTitleView()
-        titleBar.titleRes = R.string.app_name
-
         titleBar.addRightTextButton("coll")
         titleBar.addRightImageButton(android.R.drawable.ic_menu_search)
     }

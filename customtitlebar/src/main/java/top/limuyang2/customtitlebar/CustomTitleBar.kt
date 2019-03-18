@@ -17,7 +17,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.*
-import top.limuyang2.customtitlebar.utils.ScreenHelper
 import top.limuyang2.customtitlebar.utils.UIDrawableHelper
 import top.limuyang2.customtitlebar.utils.UIResHelper
 import top.limuyang2.customtitlebar.utils.UIViewHelper
@@ -26,9 +25,9 @@ import java.util.*
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 class CustomTitleBar @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = R.attr.CustomTitleBarStyle
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.CustomTitleBarStyle
 ) : RelativeLayout(context, attrs, defStyleAttr) {
     private var mLeftLastViewId: Int = DEFAULT_VIEW_ID // 左侧最右 view 的 id
     private var mRightLastViewId: Int = DEFAULT_VIEW_ID // 右侧最左 view 的 id
@@ -163,7 +162,7 @@ class CustomTitleBar @JvmOverloads constructor(
         set(value) {
             if (!isSubTitleViewAdd()) {
                 val titleLp = generateTitleViewAndSubTitleViewLp()
-                titleLp.topMargin = ScreenHelper.dp2px(context, 1)
+                titleLp.topMargin = context.dip(1)
                 mTitleContainerView.addView(mSubTitleView, titleLp)
             }
             mSubTitleView.text = value
@@ -226,19 +225,24 @@ class CustomTitleBar @JvmOverloads constructor(
     }
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
-        val array = getContext().obtainStyledAttributes(attrs, R.styleable.CustomTitleBar, defStyleAttr, 0)
+        val array =
+            getContext().obtainStyledAttributes(attrs, R.styleable.CustomTitleBar, defStyleAttr, 0)
         if (array != null) {
             mTitleBarDividerColor = array.getColor(
-                    R.styleable.CustomTitleBar_titlebar_divider_color,
-                    ContextCompat.getColor(context, R.color.config_color_divider)
+                R.styleable.CustomTitleBar_titlebar_divider_color,
+                ContextCompat.getColor(context, R.color.config_color_divider)
             )
-            mTitleBarDividerHeight = array.getDimensionPixelSize(R.styleable.CustomTitleBar_titlebar_divider_height, 1)
-            mTitleBarBgColor = array.getColor(R.styleable.CustomTitleBar_titlebar_bg_color, Color.WHITE)
-            val showDivider = array.getBoolean(R.styleable.CustomTitleBar_titlebar_show_divider, true)
+            mTitleBarDividerHeight =
+                array.getDimensionPixelSize(R.styleable.CustomTitleBar_titlebar_divider_height, 1)
+            mTitleBarBgColor =
+                array.getColor(R.styleable.CustomTitleBar_titlebar_bg_color, Color.WHITE)
+            val showDivider =
+                array.getBoolean(R.styleable.CustomTitleBar_titlebar_show_divider, true)
             getCommonFieldFormTypedArray(context, array)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val elevationValue = array.getDimension(R.styleable.CustomTitleBar_titlebar_elevation, 0f)
+                val elevationValue =
+                    array.getDimension(R.styleable.CustomTitleBar_titlebar_elevation, 0f)
                 if (elevationValue != 0f) {
                     elevation = elevationValue
                 }
@@ -258,56 +262,62 @@ class CustomTitleBar @JvmOverloads constructor(
     }
 
     private fun getCommonFieldFormTypedArray(context: Context, array: TypedArray) {
-        topBarHeight =
-                array.getDimensionPixelOffset(R.styleable.CustomTitleBar_titlebar_height, ScreenHelper.dp2px(context, 56))
+        topBarHeight = array.getDimensionPixelOffset(
+            R.styleable.CustomTitleBar_titlebar_height,
+            context.dip(56)
+        )
 
         mLeftBackDrawableRes = array.getResourceId(
-                R.styleable.CustomTitleBar_titlebar_left_back_drawable_id,
-                R.drawable.icon_titlebar_back
+            R.styleable.CustomTitleBar_titlebar_left_back_drawable_id,
+            R.drawable.icon_titlebar_back
         )
-        mTitleGravity = array.getInt(R.styleable.CustomTitleBar_titlebar_title_gravity, mTitleGravity)
+        mTitleGravity =
+            array.getInt(R.styleable.CustomTitleBar_titlebar_title_gravity, mTitleGravity)
         mTitleTextSize = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_title_text_size,
-                ScreenHelper.sp2px(context, 17)
+            R.styleable.CustomTitleBar_titlebar_title_text_size,
+            context.sp(17)
         )
         mTitleTextSizeWithSubTitle = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_title_text_size,
-                ScreenHelper.sp2px(context, 16)
+            R.styleable.CustomTitleBar_titlebar_title_text_size,
+            context.sp(16)
         )
         mSubTitleTextSize = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_subtitle_text_size,
-                ScreenHelper.sp2px(context, 11)
+            R.styleable.CustomTitleBar_titlebar_subtitle_text_size,
+            context.sp(11)
         )
         mTitleTextColor = array.getColor(
-                R.styleable.CustomTitleBar_titlebar_title_color,
-                UIResHelper.getAttrColor(context, R.attr.config_color_gray_1)
+            R.styleable.CustomTitleBar_titlebar_title_color,
+            UIResHelper.getAttrColor(context, R.attr.config_color_gray_1)
         )
         mSubTitleTextColor = array.getColor(
-                R.styleable.CustomTitleBar_titlebar_subtitle_color,
-                UIResHelper.getAttrColor(context, R.attr.config_color_gray_4)
+            R.styleable.CustomTitleBar_titlebar_subtitle_color,
+            UIResHelper.getAttrColor(context, R.attr.config_color_gray_4)
         )
         mTitleMarginHorWhenNoBtnAside = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_title_margin_horizontal_when_no_btn_aside,
-                0
+            R.styleable.CustomTitleBar_titlebar_title_margin_horizontal_when_no_btn_aside,
+            0
         )
-        mTitleContainerPaddingHor =
-                array.getDimensionPixelSize(R.styleable.CustomTitleBar_titlebar_title_container_padding_horizontal, 0)
+        mTitleContainerPaddingHor = array.getDimensionPixelSize(
+            R.styleable.CustomTitleBar_titlebar_title_container_padding_horizontal,
+            0
+        )
         mTopBarImageBtnWidth = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_image_btn_width,
-                ScreenHelper.dp2px(context, 48)
+            R.styleable.CustomTitleBar_titlebar_image_btn_width,
+            context.dip(48)
         )
         mTopBarImageBtnHeight = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_image_btn_height,
-                ScreenHelper.dp2px(context, 48)
+            R.styleable.CustomTitleBar_titlebar_image_btn_height,
+            context.dip(48)
         )
         mTopBarTextBtnPaddingHor = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_text_btn_padding_horizontal,
-                ScreenHelper.dp2px(context, 12)
+            R.styleable.CustomTitleBar_titlebar_text_btn_padding_horizontal,
+            context.dip(12)
         )
-        mTopBarTextBtnTextColor = array.getColorStateList(R.styleable.CustomTitleBar_titlebar_text_btn_color_state_list)
+        mTopBarTextBtnTextColor =
+            array.getColorStateList(R.styleable.CustomTitleBar_titlebar_text_btn_color_state_list)
         mTopBarTextBtnTextSize = array.getDimensionPixelSize(
-                R.styleable.CustomTitleBar_titlebar_text_btn_text_size,
-                ScreenHelper.sp2px(context, 16)
+            R.styleable.CustomTitleBar_titlebar_text_btn_text_size,
+            context.sp(16)
         )
     }
 
@@ -318,10 +328,10 @@ class CustomTitleBar @JvmOverloads constructor(
         if (enabled) {
             if (mTitleBarBgWithDividerDrawableCache == null) {
                 mTitleBarBgWithDividerDrawableCache = UIDrawableHelper.createItemSeparatorBg(
-                        mTitleBarDividerColor,
-                        mTitleBarBgColor,
-                        mTitleBarDividerHeight,
-                        false
+                    mTitleBarDividerColor,
+                    mTitleBarBgColor,
+                    mTitleBarDividerHeight,
+                    false
                 )
             }
             UIViewHelper.setBackgroundKeepingPadding(this, mTitleBarBgWithDividerDrawableCache)
@@ -343,11 +353,12 @@ class CustomTitleBar @JvmOverloads constructor(
             removeView(mCenterView)
         }
         mCenterView = view
-        var params: RelativeLayout.LayoutParams? = mCenterView!!.layoutParams as? RelativeLayout.LayoutParams
+        var params: RelativeLayout.LayoutParams? =
+            mCenterView!!.layoutParams as? RelativeLayout.LayoutParams
         if (params == null) {
             params = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
             )
         }
         params.addRule(RelativeLayout.CENTER_IN_PARENT)
@@ -394,8 +405,8 @@ class CustomTitleBar @JvmOverloads constructor(
      */
     private fun generateTitleViewAndSubTitleViewLp(): LinearLayout.LayoutParams {
         return LinearLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
         ).apply {
             // 对齐方式
             gravity = mTitleGravity
@@ -415,8 +426,8 @@ class CustomTitleBar @JvmOverloads constructor(
             viewLayoutParams
         } else {
             RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
             )
         }
         this.addLeftView(view, viewId, layoutParams)
@@ -451,14 +462,15 @@ class CustomTitleBar @JvmOverloads constructor(
      */
     fun addRightView(view: View, viewId: Int) {
         val viewLayoutParams = view.layoutParams
-        val layoutParams: RelativeLayout.LayoutParams = if (viewLayoutParams is RelativeLayout.LayoutParams) {
-            viewLayoutParams
-        } else {
-            RelativeLayout.LayoutParams(
+        val layoutParams: RelativeLayout.LayoutParams =
+            if (viewLayoutParams is RelativeLayout.LayoutParams) {
+                viewLayoutParams
+            } else {
+                RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
+                )
+            }
         this.addRightView(view, viewId, layoutParams)
     }
 
@@ -508,7 +520,11 @@ class CustomTitleBar @JvmOverloads constructor(
     fun addRightImageButton(@DrawableRes drawableResId: Int): UIAlphaImageButton {
         val rightButton = generateTopBarImageButton(drawableResId)
         rightButton.setChangeAlphaWhenPress(true)
-        this.addRightView(rightButton, rightButton.hashCode(), generateTopBarImageButtonLayoutParams())
+        this.addRightView(
+            rightButton,
+            rightButton.hashCode(),
+            generateTopBarImageButtonLayoutParams()
+        )
         return rightButton
     }
 
@@ -557,7 +573,11 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId      该按钮的id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addLeftTextButton(@StringRes stringResId: Int, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+    fun addLeftTextButton(
+        @StringRes stringResId: Int, viewId: Int,
+        textColor: ColorStateList,
+        textSizePX: Float
+    ): Button {
         return addLeftTextButton(resources.getString(stringResId), viewId, textColor, textSizePX)
     }
 
@@ -568,7 +588,12 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId     该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addLeftTextButton(buttonText: String, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+    fun addLeftTextButton(
+        buttonText: String,
+        viewId: Int,
+        textColor: ColorStateList,
+        textSizePX: Float
+    ): Button {
         val button = generateTopBarTextButton(buttonText, textColor, textSizePX)
         this.addLeftView(button, viewId, generateTopBarTextButtonLayoutParams())
         return button
@@ -611,7 +636,11 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId      该按钮的id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addRightTextButton(@StringRes stringResId: Int, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+    fun addRightTextButton(
+        @StringRes stringResId: Int, viewId: Int,
+        textColor: ColorStateList,
+        textSizePX: Float
+    ): Button {
         return addRightTextButton(resources.getString(stringResId), viewId, textColor, textSizePX)
     }
 
@@ -626,7 +655,12 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId     该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addRightTextButton(buttonText: String, viewId: Int, textColor: ColorStateList, textSizePX: Float): Button {
+    fun addRightTextButton(
+        buttonText: String,
+        viewId: Int,
+        textColor: ColorStateList,
+        textSizePX: Float
+    ): Button {
         val button = generateTopBarTextButton(buttonText, textColor, textSizePX)
         this.addRightView(button, viewId, generateTopBarTextButtonLayoutParams())
         return button
@@ -657,10 +691,12 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param text 按钮的文字
      * @return 返回生成的按钮
      */
-    private fun generateTopBarTextButton(text: String,
-                                         textColor: ColorStateList = mTopBarTextBtnTextColor
-                                                 ?: context.resources.getColorStateList(R.color.titlebar_text_color),
-                                         textSizePX: Float = mTopBarTextBtnTextSize.toFloat()): Button {
+    private fun generateTopBarTextButton(
+        text: String,
+        textColor: ColorStateList = mTopBarTextBtnTextColor
+            ?: context.resources.getColorStateList(R.color.titlebar_text_color),
+        textSizePX: Float = mTopBarTextBtnTextSize.toFloat()
+    ): Button {
         val button = Button(context)
         button.setBackgroundResource(0)
         button.minWidth = 0
@@ -759,8 +795,13 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param alphaBeginOffset  透明度开始变化的offset，即当 currentOffset == alphaBeginOffset 时，透明度为0
      * @param alphaTargetOffset 透明度变化的目标offset，即当 currentOffset == alphaTargetOffset 时，透明度为1
      */
-    fun computeAndSetBackgroundAlpha(currentOffset: Int, alphaBeginOffset: Int, alphaTargetOffset: Int): Int {
-        var alpha = ((currentOffset - alphaBeginOffset).toDouble() / (alphaTargetOffset - alphaBeginOffset))
+    fun computeAndSetBackgroundAlpha(
+        currentOffset: Int,
+        alphaBeginOffset: Int,
+        alphaTargetOffset: Int
+    ): Int {
+        var alpha =
+            ((currentOffset - alphaBeginOffset).toDouble() / (alphaTargetOffset - alphaBeginOffset))
         alpha = Math.max(0.0, Math.min(alpha, 1.0)) // from 0 to 1
         val alphaInt = (alpha * 255).toInt()
         this.backgroundAlpha = alphaInt
@@ -768,7 +809,8 @@ class CustomTitleBar @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val mHeightMeasureSpec: Int = View.MeasureSpec.makeMeasureSpec(topBarHeight, View.MeasureSpec.EXACTLY)
+        val mHeightMeasureSpec: Int =
+            View.MeasureSpec.makeMeasureSpec(topBarHeight, View.MeasureSpec.EXACTLY)
         super.onMeasure(widthMeasureSpec, mHeightMeasureSpec)
 
         if (isTitleContainerViewAdd()) {
@@ -798,8 +840,8 @@ class CustomTitleBar @JvmOverloads constructor(
 
                 // 标题水平居中，左右两侧的占位要保持一致
                 titleContainerWidth = View.MeasureSpec.getSize(widthMeasureSpec) - Math.max(
-                        leftViewWidth,
-                        rightViewWidth
+                    leftViewWidth,
+                    rightViewWidth
                 ) * 2 - paddingLeft - paddingRight
             } else {
                 // 标题非水平居中，左右没有按钮时，间距分别计算
@@ -812,10 +854,10 @@ class CustomTitleBar @JvmOverloads constructor(
 
                 // 标题非水平居中，左右两侧的占位按实际计算即可
                 titleContainerWidth =
-                        View.MeasureSpec.getSize(widthMeasureSpec) - leftViewWidth - rightViewWidth - paddingLeft - paddingRight
+                    View.MeasureSpec.getSize(widthMeasureSpec) - leftViewWidth - rightViewWidth - paddingLeft - paddingRight
             }
             val titleContainerWidthMeasureSpec =
-                    View.MeasureSpec.makeMeasureSpec(titleContainerWidth, View.MeasureSpec.EXACTLY)
+                View.MeasureSpec.makeMeasureSpec(titleContainerWidth, View.MeasureSpec.EXACTLY)
             mTitleContainerView.measure(titleContainerWidthMeasureSpec, mHeightMeasureSpec)
         }
     }
@@ -845,10 +887,10 @@ class CustomTitleBar @JvmOverloads constructor(
                 }
             }
             mTitleContainerView.layout(
-                    titleContainerViewLeft,
-                    titleContainerViewTop,
-                    titleContainerViewLeft + titleContainerViewWidth,
-                    titleContainerViewTop + titleContainerViewHeight
+                titleContainerViewLeft,
+                titleContainerViewTop,
+                titleContainerViewLeft + titleContainerViewWidth,
+                titleContainerViewTop + titleContainerViewHeight
             )
         }
     }
@@ -859,4 +901,16 @@ class CustomTitleBar @JvmOverloads constructor(
         private const val SUBTITLE_VIEW_TAG = 113
         private const val TITLE_CONTAINER_VIEW_TAG = 114
     }
+
+    private fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+    private fun Context.dip(value: Float): Int = (value * resources.displayMetrics.density).toInt()
+
+    //return sp dimension value in pixels
+    private fun Context.sp(value: Int): Int =
+        (value * resources.displayMetrics.scaledDensity).toInt()
+
+    private fun Context.sp(value: Float): Int =
+        (value * resources.displayMetrics.scaledDensity).toInt()
+
+
 }
