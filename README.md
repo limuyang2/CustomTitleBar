@@ -19,7 +19,8 @@ allprojects {
 再在dependencies添加：  
 ```gradle
 dependencies {
-	implementation 'com.github.limuyang2:CustomTitleBar:1.0.0'
+        //AndroidX
+	implementation 'com.github.limuyang2:CustomTitleBar:1.1.0'
 }
 ```
 
