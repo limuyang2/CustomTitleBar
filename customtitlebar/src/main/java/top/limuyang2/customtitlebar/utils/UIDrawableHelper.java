@@ -4,7 +4,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 
 public class UIDrawableHelper {
 

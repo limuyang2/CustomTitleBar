@@ -5,18 +5,19 @@ import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.DrawableRes
-import android.support.annotation.IntRange
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.*
+import androidx.annotation.DrawableRes
+import androidx.annotation.IntRange
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import top.limuyang2.customtitlebar.utils.UIDrawableHelper
 import top.limuyang2.customtitlebar.utils.UIResHelper
 import top.limuyang2.customtitlebar.utils.UIViewHelper
@@ -79,7 +80,9 @@ class CustomTitleBar @JvmOverloads constructor(
     private var mTitleGravity: Int = Gravity.START
     private var mLeftBackDrawableRes: Int = 0
     private var topBarHeight = -1
-    private var mTitleLetterSpacing = 0f //标题字间距
+    //标题字间距
+    private var mTitleLetterSpacing: Float = 0f
+    private var mTitleIsBold: Boolean = false
     private var mTitleTextSize: Int = 0
     private var mTitleTextSizeWithSubTitle: Int = 0
     private var mSubTitleTextSize: Int = 0
@@ -89,12 +92,14 @@ class CustomTitleBar @JvmOverloads constructor(
     private var mTitleContainerPaddingHor: Int = 0
     private var mTopBarImageBtnWidth: Int = 0
     private var mTopBarImageBtnHeight: Int = 0
+    private var mTopBarImageBtnPaddingHor: Int = 0
     private var mTopBarTextBtnPaddingHor: Int = 0
     private var mTopBarTextBtnTextColor: ColorStateList? = null
     private var mTopBarTextBtnTextSize: Int = 0
-    private var mTitleBarImageBtnWidth = -1
-    private var mTitleBarImageBtnHeight = -1
-    private var mTitleBarTextBtnPaddingHorizontal = -1
+    private var mImageBtnScaleType = ImageView.ScaleType.FIT_CENTER
+    //    private var mTitleBarImageBtnWidth = -1
+//    private var mTitleBarImageBtnHeight = -1
+//    private var mTitleBarTextBtnPaddingHorizontal = -1
     private val mTitleContainerRect: Rect by lazy { Rect() }
 
     val titleContainerRect: Rect
@@ -105,30 +110,6 @@ class CustomTitleBar @JvmOverloads constructor(
                 UIViewHelper.getDescendantRect(this, mTitleContainerView, mTitleContainerRect)
             }
             return mTitleContainerRect
-        }
-
-    private val topBarImageBtnWidth: Int
-        get() {
-            if (mTitleBarImageBtnWidth == -1) {
-                mTitleBarImageBtnWidth = mTopBarImageBtnWidth
-            }
-            return mTitleBarImageBtnWidth
-        }
-
-    private val topBarImageBtnHeight: Int
-        get() {
-            if (mTitleBarImageBtnHeight == -1) {
-                mTitleBarImageBtnHeight = mTopBarImageBtnHeight
-            }
-            return mTitleBarImageBtnHeight
-        }
-
-    private val topBarTextBtnPaddingHorizontal: Int
-        get() {
-            if (mTitleBarTextBtnPaddingHorizontal == -1) {
-                mTitleBarTextBtnPaddingHorizontal = mTopBarTextBtnPaddingHor
-            }
-            return mTitleBarTextBtnPaddingHorizontal
         }
 
     /**
@@ -143,6 +124,13 @@ class CustomTitleBar @JvmOverloads constructor(
                 mTitleContainerView.addView(titleView, titleLp)
             }
             titleView.text = value
+            // 加粗
+            if (mTitleIsBold) {
+                titleView.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+            } else {
+                titleView.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
+            }
+            // 字间距
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 titleView.letterSpacing = mTitleLetterSpacing
             }
@@ -213,6 +201,7 @@ class CustomTitleBar @JvmOverloads constructor(
             requestLayout()
         }
 
+
     init {
         initVar()
         init(context, attrs, defStyleAttr)
@@ -225,7 +214,10 @@ class CustomTitleBar @JvmOverloads constructor(
 
     private fun init(context: Context, attrs: AttributeSet?, defStyleAttr: Int) {
         val array =
-            getContext().obtainStyledAttributes(attrs, R.styleable.CustomTitleBar, defStyleAttr, 0)
+            getContext().obtainStyledAttributes(
+                attrs,
+                R.styleable.CustomTitleBar, defStyleAttr, 0
+            )
         if (array != null) {
             mTitleBarDividerColor = array.getColor(
                 R.styleable.CustomTitleBar_titlebar_divider_color,
@@ -246,6 +238,7 @@ class CustomTitleBar @JvmOverloads constructor(
                     elevation = elevationValue
                 }
             }
+            title = array.getString(R.styleable.CustomTitleBar_titlebar_title)
 
             array.recycle()
             setBackgroundDividerEnabled(showDivider)
@@ -272,10 +265,7 @@ class CustomTitleBar @JvmOverloads constructor(
         )
         mTitleGravity =
             array.getInt(R.styleable.CustomTitleBar_titlebar_title_gravity, mTitleGravity)
-        mTitleLetterSpacing = array.getFloat(
-            R.styleable.CustomTitleBar_titlebar_title_letter_spacing,
-            mTitleLetterSpacing
-        )
+
         mTitleTextSize = array.getDimensionPixelSize(
             R.styleable.CustomTitleBar_titlebar_title_text_size,
             context.sp(17)
@@ -306,11 +296,18 @@ class CustomTitleBar @JvmOverloads constructor(
         )
         mTopBarImageBtnWidth = array.getDimensionPixelSize(
             R.styleable.CustomTitleBar_titlebar_image_btn_width,
-            context.dip(48)
+            LayoutParams.WRAP_CONTENT
         )
+        if (mTopBarImageBtnWidth == 0) {
+            mTopBarImageBtnWidth = LayoutParams.WRAP_CONTENT
+        }
         mTopBarImageBtnHeight = array.getDimensionPixelSize(
             R.styleable.CustomTitleBar_titlebar_image_btn_height,
             context.dip(48)
+        )
+        mTopBarImageBtnPaddingHor = array.getDimensionPixelOffset(
+            R.styleable.CustomTitleBar_titlebar_image_btn_padding_horizontal,
+            0
         )
         mTopBarTextBtnPaddingHor = array.getDimensionPixelSize(
             R.styleable.CustomTitleBar_titlebar_text_btn_padding_horizontal,
@@ -322,6 +319,24 @@ class CustomTitleBar @JvmOverloads constructor(
             R.styleable.CustomTitleBar_titlebar_text_btn_text_size,
             context.sp(16)
         )
+        mTitleLetterSpacing = array.getFloat(
+            R.styleable.CustomTitleBar_titlebar_title_letter_spacing,
+            mTitleLetterSpacing
+        )
+        mTitleIsBold =
+            array.getBoolean(R.styleable.CustomTitleBar_titlebar_title_bold, mTitleIsBold)
+
+        val imageBtnScaleTypeInt = array.getInt(R.styleable.CustomTitleBar_titlebar_image_btn_scaleType, 3)
+        mImageBtnScaleType = when(imageBtnScaleTypeInt) {
+            1 -> ImageView.ScaleType.FIT_XY
+            2 -> ImageView.ScaleType.FIT_START
+            3 -> ImageView.ScaleType.FIT_CENTER
+            4 -> ImageView.ScaleType.FIT_END
+            5 -> ImageView.ScaleType.CENTER
+            6 -> ImageView.ScaleType.CENTER_CROP
+            7 -> ImageView.ScaleType.CENTER_INSIDE
+            else -> ImageView.ScaleType.FIT_CENTER
+        }
     }
 
     /**
@@ -356,15 +371,15 @@ class CustomTitleBar @JvmOverloads constructor(
             removeView(mCenterView)
         }
         mCenterView = view
-        var params: RelativeLayout.LayoutParams? =
-            mCenterView!!.layoutParams as? RelativeLayout.LayoutParams
+        var params: LayoutParams? =
+            mCenterView!!.layoutParams as? LayoutParams
         if (params == null) {
-            params = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
+            params = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
             )
         }
-        params.addRule(RelativeLayout.CENTER_IN_PARENT)
+        params.addRule(CENTER_IN_PARENT)
         addView(view, params)
     }
 
@@ -399,8 +414,8 @@ class CustomTitleBar @JvmOverloads constructor(
      * 左右有按钮时，该 View 在左右按钮之间；
      * 没有左右按钮时，该 View 距离 TopBar 左右边缘有固定的距离
      */
-    private fun generateTitleContainerViewLp(): RelativeLayout.LayoutParams {
-        return RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, topBarHeight)
+    private fun generateTitleContainerViewLp(): LayoutParams {
+        return LayoutParams(LayoutParams.MATCH_PARENT, topBarHeight)
     }
 
     /**
@@ -408,8 +423,8 @@ class CustomTitleBar @JvmOverloads constructor(
      */
     private fun generateTitleViewAndSubTitleViewLp(): LinearLayout.LayoutParams {
         return LinearLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
+            LayoutParams.WRAP_CONTENT,
+            LayoutParams.WRAP_CONTENT
         ).apply {
             // 对齐方式
             gravity = mTitleGravity
@@ -424,13 +439,13 @@ class CustomTitleBar @JvmOverloads constructor(
      */
     fun addLeftView(view: View, viewId: Int) {
         val viewLayoutParams = view.layoutParams
-        val layoutParams: RelativeLayout.LayoutParams
-        layoutParams = if (viewLayoutParams is RelativeLayout.LayoutParams) {
+        val layoutParams: LayoutParams
+        layoutParams = if (viewLayoutParams is LayoutParams) {
             viewLayoutParams
         } else {
-            RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
+            LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT
             )
         }
         this.addLeftView(view, viewId, layoutParams)
@@ -443,13 +458,13 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId       该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @param layoutParams 传入一个 LayoutParams，当把 Button addView 到 TopBar 时，使用这个 LayoutParams。
      */
-    fun addLeftView(view: View, viewId: Int, layoutParams: RelativeLayout.LayoutParams) {
+    fun addLeftView(view: View, viewId: Int, layoutParams: LayoutParams) {
         if (mLeftLastViewId == DEFAULT_VIEW_ID) {
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+            layoutParams.addRule(ALIGN_PARENT_LEFT)
         } else {
-            layoutParams.addRule(RelativeLayout.RIGHT_OF, mLeftLastViewId)
+            layoutParams.addRule(RIGHT_OF, mLeftLastViewId)
         }
-        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL)
+        layoutParams.addRule(CENTER_VERTICAL)
         layoutParams.alignWithParent = true // alignParentIfMissing
         mLeftLastViewId = viewId
         view.id = viewId
@@ -465,13 +480,13 @@ class CustomTitleBar @JvmOverloads constructor(
      */
     fun addRightView(view: View, viewId: Int) {
         val viewLayoutParams = view.layoutParams
-        val layoutParams: RelativeLayout.LayoutParams =
-            if (viewLayoutParams is RelativeLayout.LayoutParams) {
+        val layoutParams: LayoutParams =
+            if (viewLayoutParams is LayoutParams) {
                 viewLayoutParams
             } else {
-                RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                    RelativeLayout.LayoutParams.WRAP_CONTENT
+                LayoutParams(
+                    LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT
                 )
             }
         this.addRightView(view, viewId, layoutParams)
@@ -484,13 +499,13 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId       该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @param layoutParams 生成一个 LayoutParams，当把 Button addView 到 TopBar 时，使用这个 LayoutParams。
      */
-    fun addRightView(view: View, viewId: Int, layoutParams: RelativeLayout.LayoutParams) {
+    fun addRightView(view: View, viewId: Int, layoutParams: LayoutParams) {
         if (mRightLastViewId == DEFAULT_VIEW_ID) {
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+            layoutParams.addRule(ALIGN_PARENT_RIGHT)
         } else {
-            layoutParams.addRule(RelativeLayout.LEFT_OF, mRightLastViewId)
+            layoutParams.addRule(LEFT_OF, mRightLastViewId)
         }
-        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL)
+        layoutParams.addRule(CENTER_VERTICAL)
         layoutParams.alignWithParent = true // alignParentIfMissing
         mRightLastViewId = viewId
         view.id = viewId
@@ -501,9 +516,9 @@ class CustomTitleBar @JvmOverloads constructor(
     /**
      * 生成一个 LayoutParams，当把 Button addView 到 TopBar 时，使用这个 LayoutParams
      */
-    fun generateTopBarImageButtonLayoutParams(): RelativeLayout.LayoutParams {
+    fun generateTopBarImageButtonLayoutParams(): LayoutParams {
 //        lp.topMargin = Math.max(0, (getTopBarHeight() - getTopBarImageBtnHeight()) / 2);
-        return LayoutParams(topBarImageBtnWidth, topBarImageBtnHeight)
+        return LayoutParams(mTopBarImageBtnWidth, mTopBarImageBtnHeight)
     }
 
     /**
@@ -513,15 +528,15 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId        该按钮的 id，可在 ids.xml 中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addRightImageButton(@DrawableRes drawableResId: Int, viewId: Int): UIAlphaImageButton {
-        val rightButton = generateTopBarImageButton(drawableResId)
+    fun addRightImageButton(@DrawableRes drawableResId: Int, viewId: Int, scaleType: ImageView.ScaleType = mImageBtnScaleType): UIAlphaImageButton {
+        val rightButton = generateTopBarImageButton(drawableResId, scaleType)
         rightButton.setChangeAlphaWhenPress(true)
         this.addRightView(rightButton, viewId, generateTopBarImageButtonLayoutParams())
         return rightButton
     }
 
-    fun addRightImageButton(@DrawableRes drawableResId: Int): UIAlphaImageButton {
-        val rightButton = generateTopBarImageButton(drawableResId)
+    fun addRightImageButton(@DrawableRes drawableResId: Int, scaleType: ImageView.ScaleType = mImageBtnScaleType): UIAlphaImageButton {
+        val rightButton = generateTopBarImageButton(drawableResId, scaleType)
         rightButton.setChangeAlphaWhenPress(true)
         this.addRightView(
             rightButton,
@@ -538,14 +553,14 @@ class CustomTitleBar @JvmOverloads constructor(
      * @param viewId        该按钮的 id，可在ids.xml中找到合适的或新增。手工指定 viewId 是为了适应自动化测试。
      * @return 返回生成的按钮
      */
-    fun addLeftImageButton(@DrawableRes drawableResId: Int, viewId: Int): UIAlphaImageButton {
-        val leftButton = generateTopBarImageButton(drawableResId)
+    fun addLeftImageButton(@DrawableRes drawableResId: Int, viewId: Int, scaleType: ImageView.ScaleType = mImageBtnScaleType): UIAlphaImageButton {
+        val leftButton = generateTopBarImageButton(drawableResId, scaleType)
         this.addLeftView(leftButton, viewId, generateTopBarImageButtonLayoutParams())
         return leftButton
     }
 
-    fun addLeftImageButton(@DrawableRes drawableResId: Int): UIAlphaImageButton {
-        val leftButton = generateTopBarImageButton(drawableResId)
+    fun addLeftImageButton(@DrawableRes drawableResId: Int, scaleType: ImageView.ScaleType = mImageBtnScaleType): UIAlphaImageButton {
+        val leftButton = generateTopBarImageButton(drawableResId, scaleType)
         this.addLeftView(leftButton, leftButton.hashCode(), generateTopBarImageButtonLayoutParams())
         return leftButton
     }
@@ -553,9 +568,9 @@ class CustomTitleBar @JvmOverloads constructor(
     /**
      * 生成一个LayoutParams，当把 Button addView 到 TopBar 时，使用这个 LayoutParams
      */
-    fun generateTopBarTextButtonLayoutParams(): RelativeLayout.LayoutParams {
+    fun generateTopBarTextButtonLayoutParams(): LayoutParams {
 //        lp.topMargin = Math.max(0, (getTopBarHeight() - getTopBarImageBtnHeight()) / 2);
-        return LayoutParams(LayoutParams.WRAP_CONTENT, topBarImageBtnHeight)
+        return LayoutParams(LayoutParams.WRAP_CONTENT, mTopBarImageBtnHeight)
     }
 
     /**
@@ -706,7 +721,7 @@ class CustomTitleBar @JvmOverloads constructor(
         button.minHeight = 0
         button.minimumWidth = 0
         button.minimumHeight = 0
-        val paddingHorizontal = topBarTextBtnPaddingHorizontal
+        val paddingHorizontal = mTopBarTextBtnPaddingHor
         button.setPadding(paddingHorizontal, 0, paddingHorizontal, 0)
         button.setTextColor(textColor)
         button.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSizePX)
@@ -721,11 +736,12 @@ class CustomTitleBar @JvmOverloads constructor(
      *
      * @param imageResourceId 图片的 resId
      */
-    private fun generateTopBarImageButton(imageResourceId: Int): UIAlphaImageButton {
+    private fun generateTopBarImageButton(imageResourceId: Int, scaleType: ImageView.ScaleType): UIAlphaImageButton {
         val backButton = UIAlphaImageButton(context)
         backButton.setBackgroundColor(Color.TRANSPARENT)
-        backButton.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        backButton.scaleType = scaleType
         backButton.setImageResource(imageResourceId)
+        backButton.setPadding(mTopBarImageBtnPaddingHor, 0, mTopBarImageBtnPaddingHor, 0)
         return backButton
     }
 
@@ -736,6 +752,10 @@ class CustomTitleBar @JvmOverloads constructor(
      */
     fun addLeftBackImageButton(): UIAlphaImageButton {
         return addLeftImageButton(mLeftBackDrawableRes, R.id.titlebar_item_left_back)
+    }
+
+    fun addLeftBackImageButton(scaleType: ImageView.ScaleType): UIAlphaImageButton {
+        return addLeftImageButton(mLeftBackDrawableRes, R.id.titlebar_item_left_back, scaleType)
     }
 
     /**
@@ -805,15 +825,14 @@ class CustomTitleBar @JvmOverloads constructor(
     ): Int {
         var alpha =
             ((currentOffset - alphaBeginOffset).toDouble() / (alphaTargetOffset - alphaBeginOffset))
-        alpha = Math.max(0.0, Math.min(alpha, 1.0)) // from 0 to 1
+        alpha = 0.0.coerceAtLeast(alpha.coerceAtMost(1.0)) // from 0 to 1
         val alphaInt = (alpha * 255).toInt()
         this.backgroundAlpha = alphaInt
         return alphaInt
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val mHeightMeasureSpec: Int =
-            View.MeasureSpec.makeMeasureSpec(topBarHeight, View.MeasureSpec.EXACTLY)
+        val mHeightMeasureSpec: Int = MeasureSpec.makeMeasureSpec(topBarHeight, MeasureSpec.EXACTLY)
         super.onMeasure(widthMeasureSpec, mHeightMeasureSpec)
 
         if (isTitleContainerViewAdd()) {
@@ -842,8 +861,7 @@ class CustomTitleBar @JvmOverloads constructor(
                 }
 
                 // 标题水平居中，左右两侧的占位要保持一致
-                titleContainerWidth = View.MeasureSpec.getSize(widthMeasureSpec) - Math.max(
-                    leftViewWidth,
+                titleContainerWidth = MeasureSpec.getSize(widthMeasureSpec) - leftViewWidth.coerceAtLeast(
                     rightViewWidth
                 ) * 2 - paddingLeft - paddingRight
             } else {
@@ -857,10 +875,10 @@ class CustomTitleBar @JvmOverloads constructor(
 
                 // 标题非水平居中，左右两侧的占位按实际计算即可
                 titleContainerWidth =
-                    View.MeasureSpec.getSize(widthMeasureSpec) - leftViewWidth - rightViewWidth - paddingLeft - paddingRight
+                    MeasureSpec.getSize(widthMeasureSpec) - leftViewWidth - rightViewWidth - paddingLeft - paddingRight
             }
             val titleContainerWidthMeasureSpec =
-                View.MeasureSpec.makeMeasureSpec(titleContainerWidth, View.MeasureSpec.EXACTLY)
+                MeasureSpec.makeMeasureSpec(titleContainerWidth, MeasureSpec.EXACTLY)
             mTitleContainerView.measure(titleContainerWidthMeasureSpec, mHeightMeasureSpec)
         }
     }
@@ -914,6 +932,5 @@ class CustomTitleBar @JvmOverloads constructor(
 
     private fun Context.sp(value: Float): Int =
         (value * resources.displayMetrics.scaledDensity).toInt()
-
 
 }

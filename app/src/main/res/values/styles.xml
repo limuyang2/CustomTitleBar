@@ -30,6 +30,7 @@
         <!--<item name="titlebar_image_btn_height">37dp</item>-->
         <item name="titlebar_text_btn_text_size">16sp</item>
         <item name="titlebar_title_letter_spacing">0.1</item> <!--标题字间距-->
+        <item name="titlebar_image_btn_scaleType">center</item>
     </style>
 
 </resources>

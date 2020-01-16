@@ -1,7 +1,7 @@
 package top.limuyang2.customtitlebar.widget;
 
-import android.support.annotation.NonNull;
 import android.view.View;
+import androidx.annotation.NonNull;
 import top.limuyang2.customtitlebar.R;
 import top.limuyang2.customtitlebar.utils.UIResHelper;
 
